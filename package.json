@@ -1,0 +1,13 @@
+{
+  "name": "house-rentals-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "House Rentals static site + Netlify Functions (waitlist & admin panel)",
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "resend": "^4.0.0"
+  }
+}

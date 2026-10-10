@@ -1,0 +1,11 @@
+node_modules/
+.netlify/
+
+# Secrets — ποτέ στο repo. Μόνο το .env.example ανεβαίνει.
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db

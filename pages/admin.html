@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%233D5A73'/><path d='M32 10 L56 32 H46 V54 H18 V32 H8 Z' fill='white'/></svg>">
+    <title>Admin - House Rentals</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="/css/houseSite.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="titleBox">
+        <h1 id="title">House Rentals — Admin</h1>
+    </div>
+    <br>
+
+    <main class="page-content">
+        <div id="adminLoginView" class="admin-login-box">
+            <h2>Σύνδεση</h2>
+            <p class="admin-message" id="loginMessage"></p>
+            <form id="loginForm">
+                <label for="adminPassword">Κωδικός</label>
+                <input type="password" id="adminPassword" name="password" required autocomplete="current-password">
+                <button type="submit" class="waitlist-submit">Είσοδος</button>
+            </form>
+        </div>
+
+        <div id="adminPanelView" class="admin-panel" style="display:none;">
+            <div class="admin-panel-header">
+                <h2>Διαμερίσματα</h2>
+                <button type="button" class="admin-logout-btn" id="logoutBtn">Αποσύνδεση</button>
+            </div>
+            <p class="admin-message" id="panelMessage"></p>
+            <div id="unitsContainer"></div>
+        </div>
+    </main>
+
+    <script src="/js/admin.js"></script>
+</body>
+</html>

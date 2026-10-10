@@ -1,0 +1,1320 @@
+body{
+    font-family: 'Lexend', sans-serif;
+    height: 100%;
+    color: #E7ECEF;
+    background:
+        radial-gradient(circle at 10% 20%, rgba(120, 160, 130, 0.08), transparent 35%),
+        radial-gradient(circle at 90% 80%, rgba(90, 130, 160, 0.08), transparent 35%),
+        #17232D;
+}
+.hero-image {
+    position: relative;
+    min-height: 100vh;
+    /* Ουδέτερο σκούρο background αντί για φωτογραφία: το video χρειάζεται
+       ένα κλάσμα δευτερολέπτου για να αποκτήσει το πρώτο του frame, και σε
+       αυτό το διάστημα φαινόταν το background-image από κάτω (παλιά φωτο
+       του front-photo1.webp) πριν καλυφθεί από το video — έδινε την
+       εντύπωση "flash" μιας παλιάς εικόνας σπιτιού σε κάθε reload. */
+    background: linear-gradient(160deg, #101a22, #1c2b36);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    /* ΟΧΙ overflow:hidden εδώ: το search dropdown (#list) είναι
+       απόγονος του .hero-image με position:absolute — το
+       overflow:hidden το περιέκοβε αόρατα όταν το hero είναι
+       κοντό (π.χ. 60vh σε mobile), αφήνοντας πολύ λίγο ορατό
+       χώρο για τη λίστα αποτελεσμάτων. Δεν χρειάζεται εδώ ούτως
+       ή άλλως — το video/overlay γεμίζουν το κουτί τους με
+       position:absolute + 100%/100%, όχι με υπερμέγεθος. */
+}
+
+.hero-image .hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .hero-image {
+        min-height: 60vh;
+        background-image: linear-gradient(rgba(10, 16, 22, 0.42), rgba(10, 16, 22, 0.52)), url('/assets/images/athens_lycabettus_still.webp');
+        background-position: center center;
+        background-size: cover;
+    }
+
+    .hero-image .hero-video {
+        display: none;
+    }
+
+    .hero-content {
+        min-height: auto;
+        padding: 50px 16px 40px;
+    }
+
+    #titleBox {
+        width: min(330px, 100%);
+        padding: 12px 18px;
+        border-radius: 28px;
+        background: rgba(15, 23, 30, 0.64);
+        backdrop-filter: blur(8px);
+    }
+
+    #title {
+        font-size: clamp(2rem, 8vw, 2.8rem);
+        line-height: 1.1;
+    }
+
+    .search-container {
+        margin-top: 22px;
+        width: min(420px, 100%);
+        padding: 6px 8px 6px 14px;
+        background: rgba(61, 90, 115, 0.76);
+    }
+
+    .search-input {
+        font-size: 0.95rem;
+    }
+
+    .navbar ul {
+        flex-wrap: wrap;
+        gap: 8px 6px;
+    }
+
+    .navbar a {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    color: white;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#titleBox{
+    box-sizing: border-box;
+    background-color: rgba(20, 32, 42, 0.62);
+
+    /*background-color: #3D5A73;*/
+    color: white;
+    padding: 15px 30px ;
+    border-radius: 100px;
+    box-shadow: 5px 5px 15px hsla(0, 0%, 0%, 0.3);
+    text-align: center;
+    width: min(400px, 100%);
+    margin: 0 auto;
+    backdrop-filter: blur(8px);
+
+}
+#title{
+    font-family: Georgia, serif;
+    font-size: clamp(2rem, 1.5vw, 4rem);
+
+    font-weight: bold;
+    color: white;
+    font-weight: 600;
+    letter-spacing: 1px; 
+}
+
+.search-container {
+    position: relative;
+    box-sizing: border-box;
+    width: min(900px, 100%);
+    display: flex;
+    align-items: center;
+    padding: 8px 10px 8px 18px;
+    border-radius: 28px;
+    background-color: #3D5A73;
+    box-shadow: 3px 3px 10px hsla(0, 0%, 0%, 0.3);
+    border: 1px solid rgba(255,255,255,0.20);
+    transition: 0.25s ease;
+    margin: 0 auto;
+    margin-top: 60px;
+    transition: transform .25s cubic-bezier(.22,.61,.36,1), background-color .25s ease, box-shadow .25s ease;
+    transform: translateY(0);
+}
+.search-container:active,
+.search-container.is-open {
+    transform: translateY(-2px) scale(1.015);
+    box-shadow: 0 14px 30px hsla(0, 0%, 0%, 0.28);
+}
+.search-container button:active,
+#filterToggle:active {
+    transform: none;
+}
+
+#filterToggle {
+    margin: 0 0 0 4px;
+    background: transparent;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#filterToggle:hover { background: transparent; }
+
+#filterPanel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 9px);
+  right: 0;
+  margin-top: 8px;
+  background-color: rgba(20, 32, 42, 0.62);
+
+  border: 1px solid #d6ded9;
+  border-radius: 16px;
+  box-shadow: 3px 3px 10px hsla(0, 0%, 0%, 0.2);
+  padding: 14px 17px;
+  width: 230px;
+  z-index: 25;
+  flex-direction: column;
+  gap: 7px;
+}
+#filterPanel label {
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 5px;
+}
+#filterPanel input, #filterPanel select {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid hsl(32, 30%, 75%);
+  background-color: rgba(20, 32, 42, 0.62);
+  color: white;
+  font-size: 13px;
+  outline: none;
+}
+#filterPanel input:focus,
+#filterPanel select:focus {
+    border-color: #6f8fa6;
+    box-shadow: 0 0 0 3px rgba(111,143,166,0.13);
+}
+#filterPanel button {
+  margin-top: 10px;
+    background: #3d5a73;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 9px;
+    cursor: pointer;
+}
+.search-container:focus-within {
+    background: #6F8FA6;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.32);
+}
+.material-symbols-outlined {
+    color: white;
+    font-size: 22px;
+}
+.search-input {
+    min-width: 0;
+    flex: 1;
+    font-family: 'Lexend', sans-serif;
+    color: white;
+    margin-left: 10px;
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 250px;
+    height: 30px;
+    font-size: 16px;
+}
+.search-input::placeholder {
+    color: white;
+} 
+.search-container button {
+    margin-top: 0; /* ακύρωσε το γενικό button margin-top:15px που κληρονομεί */
+    background: transparent;
+    color: white;
+    padding: 8px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-container button:hover,
+#filterToggle:hover {
+    background: rgba(255,255,255,0.13);
+}
+
+#list {
+  list-style: none;
+  margin: 9px 0 0;
+  padding: 8px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(15, 23, 30, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 15px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.4);
+  z-index: 20;
+  display: none;
+  max-height: 260px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+#list li.result-empty {
+    padding: 16px;
+    text-align: center;
+    color: #AEBBC4;
+    font-family: 'Lexend', sans-serif;
+    font-size: 14px;
+    cursor: default;
+}
+
+.result-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.18s ease;
+    font-family: 'Lexend', sans-serif;
+}
+.result-card:hover {
+    background: rgba(111, 143, 166, 0.18);
+}
+.result-card + .result-card {
+    margin-top: 2px;
+}
+.result-thumb {
+    flex: 0 0 52px;
+    width: 52px;
+    height: 52px;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+}
+.result-info {
+    flex: 1;
+    min-width: 0;
+}
+.result-top {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 2px;
+}
+.result-area {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+.result-status {
+    font-size: 0.68em;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+.result-status--rented {
+    background: rgba(201, 138, 62, 0.22);
+    color: #E8B368;
+}
+.result-status--available {
+    background: rgba(111, 143, 166, 0.25);
+    color: #9FC1D6;
+}
+.result-price {
+    color: white;
+    font-weight: 700;
+    font-size: 15px;
+}
+.result-price span {
+    font-weight: 400;
+    color: #AEBBC4;
+    font-size: 0.75em;
+}
+.result-meta {
+    color: #AEBBC4;
+    font-size: 12px;
+    margin-top: 1px;
+}
+.result-cta {
+    flex: 0 0 auto;
+    color: #9FC1D6;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+label{
+    font-size: 1.3em;
+    font-weight: normal;
+}
+button{
+    margin-top: 15px;
+    background-color: #3D5A73;
+    color: white;
+    font-size: 1em;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover{
+    background-color: #6F8FA6;
+}
+.navbar{
+    text-align: center;
+}
+.navbar ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgba(20, 32, 42, 0.62);
+    display: flex;
+    justify-content: center;
+    border-radius: 100px;
+}
+.navbar a{
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 1.2em;
+}
+.navbar a:hover{
+    background-color: #6F8FA6;
+    color: white;
+}
+.locations-header {
+    text-align: center;
+    margin: 70px 0 30px 0;
+}
+
+.locations-header h2 {
+    margin: 0;
+    color: #E7ECEF;
+    /* color: #3D5A73; */
+    font-family: 'Georgia', serif;
+    font-size: 2.4em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.locations-header p {
+    margin: 10px 0 0 0;
+    /* color: #6F7D86; */
+    color: #AEBBC4;
+    font-family: 'Arial', sans-serif;
+    font-size: 1.05em;
+    letter-spacing: 0.3px;
+}
+.locations-header::after {
+    content: "";
+    display: block;
+    width: 55px;
+    height: 3px;
+    background-color: #6F8FA6;
+    border-radius: 10px;
+    margin: 18px auto 0;
+}
+/* ============================================================
+   PROPERTY CARDS — swipeable photo carousel + πάντα ορατές
+   πληροφορίες. Αντικατέστησε το προηγούμενο 3D flip-on-hover
+   effect, το οποίο δεν δούλευε καθόλου σε touch/mobile συσκευές
+   (το CSS :hover δεν υπάρχει σε touch, και τα 3D transforms με
+   preserve-3d/backface-visibility έχουν γνωστά προβλήματα
+   rendering σε πολλά mobile browsers). Το carousel χρησιμοποιεί
+   native CSS scroll-snap για swipe — δουλεύει αξιόπιστα παντού
+   χωρίς custom touch-gesture JS.
+   ============================================================ */
+.property-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto 40px;
+    padding: 0 40px;
+    box-sizing: border-box;
+}
+
+.property-card {
+    background-color: rgba(20, 32, 42, 0.62);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px hsla(0, 0%, 0%, 0.25);
+    display: flex;
+    flex-direction: column;
+}
+
+.property-carousel {
+    position: relative;
+}
+.property-status-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    background: rgba(201, 138, 62, 0.92);
+    color: white;
+    font-size: 0.78em;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 20px;
+    pointer-events: none;
+}
+.property-status-badge--available {
+    background: rgba(111, 143, 166, 0.92);
+}
+
+.carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.carousel-track::-webkit-scrollbar { display: none; }
+
+.carousel-slide {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    aspect-ratio: 4 / 3;
+    background-size: cover;
+    background-position: center;
+}
+
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(20, 32, 42, 0.55);
+    color: white;
+    border: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    font-size: 1.4em;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color .2s ease;
+    padding: 0;
+    margin: 0;
+}
+.carousel-arrow:hover { background: rgba(20, 32, 42, 0.85); }
+.carousel-prev { left: 10px; }
+.carousel-next { right: 10px; }
+
+.carousel-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    pointer-events: none;
+}
+.carousel-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: background-color .2s ease, transform .2s ease;
+}
+.carousel-dot.active {
+    background: white;
+    transform: scale(1.3);
+}
+
+.property-info {
+    padding: 16px 18px 20px;
+    text-align: center;
+    color: white;
+}
+.property-info h3 {
+    margin: 0 0 6px;
+    font-size: 1.25em;
+    color: white;
+}
+.property-specs {
+    margin: 0 0 14px;
+    color: #AEBBC4;
+}
+.property-cta {
+    background-color: #3D5A73;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 0;
+}
+.property-cta:hover {
+    background-color: #6F8FA6;
+}
+/* ============================================================
+   LOCATION PAGES — hero banner με τη φωτο του κτιρίου + grid
+   από unit-cards (ένα per διαμέρισμα), με στατιστικά τ.μ./τιμή/
+   €-ανά-τ.μ. για άμεση σύγκριση. Αντικατέστησε το παλιό
+   containerHouse/photo-gallery σύστημα (1 φωτο-γκαλερί χωρίς
+   δεδομένα ανά διαμέρισμα).
+   ============================================================ */
+.location-hero {
+    position: relative;
+    min-height: 46vh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+}
+.location-hero-photo {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+}
+.location-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(15, 23, 30, 0.92), rgba(15, 23, 30, 0.35));
+}
+.location-hero-info {
+    position: relative;
+    z-index: 1;
+    padding: 40px;
+    color: white;
+}
+.location-hero-info h2 {
+    margin: 0 0 8px;
+    font-family: 'Georgia', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: white;
+}
+.location-address {
+    margin: 0 0 6px;
+    color: #E7ECEF;
+    font-size: 1.05em;
+}
+.location-summary {
+    margin: 0;
+    color: #AEBBC4;
+    font-size: 1.1em;
+}
+
+.units-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 40px;
+    box-sizing: border-box;
+}
+/* Μονό διαμέρισμα (π.χ. Βύρωνας) — κεντραρισμένο, αλλά με το
+   ΙΔΙΟ πλάτος που θα είχε μια κανονική στήλη: calc(50% - 12px)
+   είναι μαθηματικά ο ίδιος τύπος με (πλάτος - gap) / 2, οπότε
+   ταιριάζει ακριβώς με τις κάρτες στις άλλες σελίδες σε κάθε
+   ανάλυση οθόνης, δεν είναι hardcoded τιμή. */
+.units-grid > .unit-card:only-child {
+    grid-column: 1 / -1;
+    width: calc(50% - 12px);
+    margin: 0 auto;
+}
+
+.unit-card {
+    position: relative;
+    background-color: rgba(20, 32, 42, 0.62);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px hsla(0, 0%, 0%, 0.25);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+.unit-card--best {
+    border: 1px solid #6F8FA6;
+    box-shadow: 0 8px 28px hsla(200, 40%, 50%, 0.35);
+}
+.unit-best-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1;
+    background: #6F8FA6;
+    color: white;
+    font-size: 0.78em;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+.unit-best-badge--rented {
+    background: #C98A3E;
+}
+.unit-card--rented .unit-thumb {
+    filter: grayscale(35%);
+    opacity: 0.75;
+}
+.unit-thumb {
+    height: 140px;
+    background-size: cover;
+    background-position: center;
+}
+.unit-body {
+    padding: 18px 20px 22px;
+    text-align: center;
+}
+.unit-floor {
+    margin: 0 0 14px;
+    font-size: 1.1em;
+    color: white;
+}
+.unit-stats {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 16px;
+}
+.unit-stat {
+    display: flex;
+    flex-direction: column;
+}
+.unit-stat-value {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: white;
+}
+.unit-stat-label {
+    font-size: 0.75em;
+    color: #AEBBC4;
+}
+.unit-cta {
+    display: inline-block;
+    background-color: #3D5A73;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.95em;
+}
+.unit-cta:hover {
+    background-color: #6F8FA6;
+}
+
+.location-map {
+    max-width: 1200px;
+    margin: 0 auto 50px;
+    padding: 0 40px;
+    box-sizing: border-box;
+}
+.location-map iframe {
+    width: 100%;
+    height: 320px;
+    border: 0;
+    border-radius: 12px;
+    display: block;
+}
+
+/*.fa-brands.fa-facebook{
+    color: hsl(0, 0%, 0%);
+
+}
+.fa-brands.fa-instagram{
+    color: hsl(19, 80%, 42%);
+}
+.fa-brands.fa-twitter{
+    color: hsl(186, 77%, 49%);
+}
+.icons{
+    margin-right: 100px;
+}*/
+.sitefooter {
+    background-color: #1F3547;
+    color: #E7ECEF;
+    padding: 56px 40px 32px;
+}
+.footercontent {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    text-align: left;
+    padding-bottom: 40px;
+}
+.footer-section h3 {
+    color: #fff;
+    font-size: 1.25em;
+    margin: 0 0 18px;
+}
+.footer-section p { margin: 6px 0; color: #E7ECEF; }
+.emailLink {
+    color: #E7ECEF;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 4px;
+}
+.emailLink:hover { text-decoration: underline; }
+.footer-section ul { list-style: none; margin: 0; padding: 0; }
+.footer-section li { margin-bottom: 12px; }
+.footer-section a { color: #E7ECEF; text-decoration: none; }
+.footer-section a:hover { color: #fff; text-decoration: underline; }
+
+.sitefooter > h3 {
+    text-align: center;
+    color: #fff;
+    margin: 0 0 20px;
+    font-size: 1.15em;
+}
+
+
+.icons {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    margin: 0 0 28px;
+}
+.icons a { font-size: 1.5em; }
+
+.icons a {
+    color: #AEBBC4;
+    transition: color .2s ease, opacity .2s ease;
+}
+.icons a:hover { opacity: .8; }
+
+.icons a[href*="facebook"] { color: #7EA6FF !important; }
+.icons a[href*="instagram"] { color: #F77E9E !important; }
+.icons a[href*="twitter"], .icons a[href*="x.com"] { color: #7FDBFF !important; }
+
+.icons svg { fill: currentColor !important; }
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.18);
+    padding-top: 18px;
+    font-size: .85em;
+    color: #B7C2C9;
+}
+
+/* ============================================================
+   CONTENT PAGES — About / Services / Contact. Πραγματικό
+   περιεχόμενο δίγλωσσο: Ελληνικά πρώτα, Αγγλική μετάφραση από
+   κάτω σε πιο απαλό στυλ. Δεν υπάρχει language-toggle σύστημα
+   στο site, οπότε αυτό είναι το πιο απλό/αξιόπιστο bilingual
+   pattern — στο ίδιο πνεύμα με τα ήδη υπάρχοντα δίγλωσσα labels
+   (π.χ. footer "Επικοινωνία/Contact us").
+   ============================================================ */
+.page-content {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 40px;
+    box-sizing: border-box;
+}
+.page-content h2 {
+    font-family: 'Georgia', serif;
+    font-size: 2em;
+    color: white;
+    margin: 0 0 16px;
+}
+.page-content h3 {
+    color: white;
+    font-size: 1.3em;
+    margin: 34px 0 14px;
+}
+.page-content p {
+    line-height: 1.6;
+    margin: 0 0 8px;
+}
+.lang-en {
+    color: #AEBBC4;
+    font-size: 0.95em;
+    font-style: italic;
+    margin: 0 0 22px;
+}
+.todo-placeholder {
+    color: #E8B368;
+    background: rgba(201, 138, 62, 0.15);
+    border-bottom: 1px dashed #E8B368;
+    padding: 0 2px;
+    font-style: normal;
+}
+
+.value-list {
+    list-style: none;
+    margin: 0 0 10px;
+    padding: 0;
+    display: grid;
+    gap: 16px;
+}
+.value-item {
+    background: rgba(20, 32, 42, 0.5);
+    border-radius: 10px;
+    padding: 16px 18px;
+    border-left: 3px solid #6F8FA6;
+}
+.value-item strong {
+    display: block;
+    color: white;
+    margin-bottom: 4px;
+}
+.value-item .lang-en {
+    margin: 4px 0 0;
+}
+
+.building-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin: 20px 0 10px;
+    list-style: none;
+    padding: 0;
+}
+.building-strip figure {
+    margin: 0;
+}
+.building-strip img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+}
+.building-strip figcaption {
+    text-align: center;
+    font-size: 0.85em;
+    color: #AEBBC4;
+    margin-top: 6px;
+}
+
+.steps-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.step {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 26px;
+}
+.step-number {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #3D5A73;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+.step-body h4 {
+    margin: 0 0 6px;
+    color: white;
+    font-size: 1.1em;
+}
+.step-body p {
+    margin: 0 0 4px;
+}
+
+.contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+    margin-top: 30px;
+}
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.contact-form label {
+    font-size: 0.95em;
+    font-weight: 600;
+    color: white;
+    margin-bottom: -6px;
+}
+.contact-form input,
+.contact-form textarea {
+    background: rgba(20, 32, 42, 0.5);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: white;
+    font-family: 'Lexend', sans-serif;
+    font-size: 0.95em;
+    box-sizing: border-box;
+}
+.contact-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: #6F8FA6;
+}
+.contact-form button {
+    align-self: flex-start;
+}
+.contact-map iframe {
+    width: 100%;
+    height: 300px;
+    border: 0;
+    border-radius: 12px;
+    display: block;
+}
+.contact-info-block {
+    margin-bottom: 24px;
+}
+.contact-info-block p {
+    margin: 4px 0;
+}
+
+@media (max-width: 900px) {
+    .contact-layout { grid-template-columns: 1fr; }
+    .building-strip { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 700px) {
+    .page-content { padding: 0 20px; }
+    .footercontent { grid-template-columns: 1fr; text-align: center; }
+    .hero-image { min-height: 60vh; }
+    .hero-content { min-height: auto; padding: 50px 16px 40px; }
+    .search-container { margin-top: 24px; width: min(420px, 100%); }
+    .units-grid { grid-template-columns: 1fr; }
+    .units-grid > .unit-card:only-child { width: 100%; }
+    /* Στενό τηλέφωνο: το "Δες περισσότερα →" δεν χωράει άνετα
+       δίπλα στο όνομα + badge "Ενοικιασμένο" — το κρύβουμε, όλη
+       η κάρτα είναι ήδη clickable, οπότε δεν χάνεται λειτουργία. */
+    .result-cta { display: none; }
+    .result-thumb { flex: 0 0 44px; width: 44px; height: 44px; }
+}
+
+/* Tablet — ενδιάμεσο πλάτος search bar, ομαλή μετάβαση ανάμεσα
+   στο συμπαγές mobile (420px) και το πλατύ desktop (900px, βλ.
+   βάση κανόνα .search-container). Ευθυγραμμίζεται με τα ήδη
+   υπάρχοντα breakpoints του αρχείου (700 / 1024) ώστε να μην
+   υπάρχει κενό ή επικάλυψη ανάμεσά τους. */
+@media (min-width: 701px) and (max-width: 1023px) {
+    .search-container { width: min(680px, 100%); }
+}
+
+/* ============================================================
+   RESPONSIVE / MOBILE — property cards, gallery, navbar.
+   ============================================================ */
+@media (max-width: 1024px) {
+    .property-grid {
+        grid-template-columns: 1fr;
+        max-width: 500px;
+        padding: 0 20px;
+    }
+    .units-grid {
+        padding: 0 20px;
+    }
+    .location-map {
+        padding: 0 20px;
+    }
+    .navbar a {
+        padding: 12px 10px;
+        font-size: 1.05em;
+    }
+}
+
+@media (max-width: 480px) {
+    .location-hero-info {
+        padding: 24px 20px;
+    }
+    .navbar a {
+        padding: 10px 6px;
+        font-size: 0.95em;
+    }
+}
+
+/* Πολύ στενές οθόνες (παλιά/μικρά Android) — extra περιθώριο
+   ασφαλείας ώστε το navbar pill να μη φτάσει ποτέ σε clipping. */
+@media (max-width: 360px) {
+    .navbar a {
+        padding: 8px 4px;
+        font-size: 0.85em;
+    }
+    #titleBox {
+        padding: 12px 20px;
+    }
+}
+
+/* ============================================================
+   WAITLIST MODAL — "Ενημέρωσέ με όταν ελευθερωθεί". Ένα και
+   μοναδικό overlay στο DOM, ανοίγει/κλείνει με .is-open.
+   ============================================================ */
+.unit-cta--waitlist {
+    border: none;
+    font-family: inherit;
+    cursor: pointer;
+}
+.waitlist-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(10, 16, 22, 0.72);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.waitlist-modal-overlay.is-open {
+    display: flex;
+}
+.waitlist-modal {
+    position: relative;
+    width: min(420px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    background-color: #1c2b36;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    box-shadow: 0 20px 50px hsla(0, 0%, 0%, 0.45);
+    padding: 28px 26px;
+    box-sizing: border-box;
+}
+.waitlist-modal h3 {
+    margin: 0 0 6px;
+    color: white;
+    font-size: 1.3em;
+}
+.waitlist-modal-subtitle {
+    margin: 0 0 18px;
+    color: #AEBBC4;
+}
+.waitlist-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: none;
+    border: none;
+    color: #AEBBC4;
+    font-size: 1.6em;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px;
+}
+.waitlist-modal-close:hover {
+    color: white;
+}
+.waitlist-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.waitlist-form label {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: white;
+    margin-bottom: -6px;
+}
+.waitlist-form input {
+    background: rgba(20, 32, 42, 0.5);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: white;
+    font-family: 'Lexend', sans-serif;
+    font-size: 0.95em;
+    box-sizing: border-box;
+}
+.waitlist-form input:focus {
+    outline: none;
+    border-color: #6F8FA6;
+}
+.waitlist-hidden-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+.waitlist-submit {
+    margin-top: 6px;
+    background-color: #3D5A73;
+    color: white;
+    border: none;
+    padding: 11px 20px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    cursor: pointer;
+}
+.waitlist-submit:hover:not(:disabled) {
+    background-color: #6F8FA6;
+}
+.waitlist-submit:disabled {
+    opacity: 0.7;
+    cursor: default;
+}
+.waitlist-form-message {
+    margin: 4px 0 0;
+    font-size: 0.9em;
+    min-height: 1.2em;
+}
+.waitlist-form-message--success {
+    color: #7FBF8E;
+}
+.waitlist-form-message--error {
+    color: #E08A6B;
+}
+
+/* ============================================================
+   ADMIN PANEL — /pages/admin.html. Ίδια γλώσσα σχεδίασης με το
+   υπόλοιπο site (κάρτες, χρώματα), απλή λίστα + toggle buttons.
+   ============================================================ */
+.admin-login-box {
+    max-width: 360px;
+    margin: 60px auto;
+    padding: 28px 26px;
+    background-color: rgba(20, 32, 42, 0.62);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    box-sizing: border-box;
+}
+.admin-login-box h2 {
+    margin-top: 0;
+    color: white;
+}
+.admin-login-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.admin-login-box input {
+    background: rgba(20, 32, 42, 0.5);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: white;
+    font-family: 'Lexend', sans-serif;
+    font-size: 0.95em;
+    box-sizing: border-box;
+}
+.admin-panel {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+.admin-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.admin-location-group {
+    margin-bottom: 28px;
+}
+.admin-location-group h3 {
+    color: white;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 8px;
+}
+.admin-unit-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 18px;
+    background-color: rgba(20, 32, 42, 0.62);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+.admin-unit-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.admin-unit-label {
+    color: white;
+    font-weight: 600;
+}
+.admin-unit-meta {
+    color: #AEBBC4;
+    font-size: 0.85em;
+}
+.admin-status-pill {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: 600;
+    width: fit-content;
+}
+.admin-status-pill--rented {
+    background: #C98A3E;
+    color: white;
+}
+.admin-status-pill--available {
+    background: #4E8A63;
+    color: white;
+}
+.admin-toggle-btn {
+    background-color: #3D5A73;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.admin-toggle-btn:hover:not(:disabled) {
+    background-color: #6F8FA6;
+}
+.admin-toggle-btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+.admin-logout-btn {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #AEBBC4;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.admin-message {
+    margin: 0 0 16px;
+    font-size: 0.9em;
+}
+.admin-message--error {
+    color: #E08A6B;
+}
+.admin-message--success {
+    color: #7FBF8E;
+}
